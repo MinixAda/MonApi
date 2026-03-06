@@ -37,7 +37,7 @@ jobs:
           echo "=============================================="
           echo "Pipeline CI/CD démarré avec succès !"
           echo "Projet  : MonApi (ASP.NET Core)"
-          echo "Branche : ${{ github.MinixAda/MonApi }}"
+          echo "Branche : ${{ github.ref_name }}"
           echo "Commit  : ${{ github.sha }}"
           echo "Auteur  : ${{ github.actor }}"
           echo "=============================================="
