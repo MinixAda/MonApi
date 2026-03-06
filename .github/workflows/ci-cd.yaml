@@ -32,14 +32,14 @@ jobs:
       - name:  Restaurer les packages NuGet
         run: dotnet restore
 
-      - name: 🚀 Message de démarrage
+      - name:  Message de démarrage
         run: |
           echo "=============================================="
-          echo "  Pipeline CI/CD démarré avec succès !"
-          echo "  Projet  : MonApi (ASP.NET Core)"
-          echo "  Branche : ${{ github.MinixAda/MonApi }}"
-          echo "  Commit  : ${{ github.sha }}"
-          echo "  Auteur  : ${{ github.actor }}"
+          echo "Pipeline CI/CD démarré avec succès !"
+          echo "Projet  : MonApi (ASP.NET Core)"
+          echo "Branche : ${{ github.MinixAda/MonApi }}"
+          echo "Commit  : ${{ github.sha }}"
+          echo "Auteur  : ${{ github.actor }}"
           echo "=============================================="
 
   
