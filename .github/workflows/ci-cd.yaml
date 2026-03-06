@@ -1,0 +1,113 @@
+
+name: CI/CD — MonApi 
+
+
+on:
+  push:
+    branches: [ main ]         # 1 personne pousse du code sur main
+  pull_request:
+    branches: [ main ]         # 1 personne ouvre une PR vers main
+
+
+jobs:
+
+
+  build-and-test:
+    name:  Tests & Build
+    runs-on: ubuntu-latest     
+
+    steps:
+
+
+      - name:  Checkout du code source
+        uses: actions/checkout@v4
+
+
+      - name:  Installer .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'  # x = dernière version patch disponible
+
+
+      - name:  Restaurer les packages NuGet
+        run: dotnet restore
+
+      - name: 🚀 Message de démarrage
+        run: |
+          echo "=============================================="
+          echo "  Pipeline CI/CD démarré avec succès !"
+          echo "  Projet  : MonApi (ASP.NET Core)"
+          echo "  Branche : ${{ github.MinixAda/MonApi }}"
+          echo "  Commit  : ${{ github.sha }}"
+          echo "  Auteur  : ${{ github.actor }}"
+          echo "=============================================="
+
+  
+      - name: Exécuter les tests unitaires
+        run: dotnet test --no-restore --verbosity normal
+
+
+      - name: 🏗️ Build Release
+        run: dotnet build --no-restore --configuration Release
+
+
+      - name: ✅ Message de succès
+        run: |
+          echo "=============================================="
+          echo "  ✅ Tous les tests sont passés !"
+          echo "  ✅ Build Release réalisé avec succès !"
+          echo "  🎯 Le code est prêt pour le déploiement."
+          echo "=============================================="
+
+
+
+  # Job 2 : notify-on-failure
+  # Envoie un email si le job "build-and-test" a échoué.
+
+
+  notify-on-failure:
+    name: 📧 Notification d'échec
+    runs-on: ubuntu-latest
+
+    # "needs" --> ce job attend que "build-and-test" soit terminé
+    needs: build-and-test
+
+
+    if: failure()
+
+    steps:
+
+      - name:  Envoyer l'email d'erreur
+
+        uses: dawidd6/action-send-mail@v3
+        with:
+    
+          server_address: smtp.gmail.com
+          server_port: 587                              # Port SMTP avec STARTTLS
+          username: ${{ secrets.MAIL_USERNAME }}        # minix.ada@gmail.com
+          password: ${{ secrets.MAIL_PASSWORD }}        # Mot de passe d'application Gmail
+
+
+          to: ${{ secrets.MAIL_USERNAME }}              # M'enoie le mail à moi-même'
+          from: GitHub Actions <${{ secrets.MAIL_USERNAME }}>
+
+
+          subject: "🚑 ÉCHEC CI/CD — MonApi — Branche ${{ github.ref_name }}"
+          body: |
+            🚨 Le pipeline CI/CD a rencontré une erreur !
+
+           
+            📋 DÉTAILS DE L'ÉCHEC
+
+            🗂  Dépôt    : ${{ github.repository }}
+            🌿 Branche  : ${{ github.ref_name }}
+            🔑 Commit   : ${{ github.sha }}
+            👤 Auteur   : ${{ github.actor }}
+            🕐 Date     : ${{ github.event.head_commit.timestamp }}
+
+            🔗 VOIR LES LOGS COMPLETS
+
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
+

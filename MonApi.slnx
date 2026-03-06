@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Éléments de solution/">
+    <File Path=".github/workflows/bea.yaml" />
+  </Folder>
   <Project Path="MonApi.Test/MonApi.Test.csproj" />
   <Project Path="MonApi/MonApi.csproj" />
 </Solution>
