@@ -7,7 +7,7 @@ namespace MonApi.Controllers
 {
 
     [ApiController]
-    [Route("api")]         
+    [Route("api/[controller]")]         
 
     public class HelloController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace MonApi.Controllers
             _mathService = mathService;
         }
 
-        [HttpGet("hello")]   // Route finale : GET /api/hello
+        [HttpGet]   // Route finale : GET /api/hello
         public IActionResult Hello()
         {
             int resultat = _mathService.Addition(40, 2); // 40 + 2 = 42

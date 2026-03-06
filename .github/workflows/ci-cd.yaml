@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
 
-      - name:  Installer .NET 8 SDK
+      - name:  Installer .NET 10 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'  # x = dernière version patch disponible
@@ -79,17 +79,18 @@ jobs:
 
       - name:  Envoyer l'email d'erreur
 
-        uses: dawidd6/action-send-mail@v3
+        uses: JaSiLez/smtp-notifier@main
         with:
     
-          server_address: smtp.gmail.com
-          server_port: 587                              # Port SMTP avec STARTTLS
+          server_address: ${{ vars.SMTP_SERVER }}
+          server_port: ${{ vars.SMTP_PORT }}                          # Port SMTP avec STARTTLS
           username: ${{ secrets.MAIL_USERNAME }}        # minix.ada@gmail.com
           password: ${{ secrets.MAIL_PASSWORD }}        # Mot de passe d'application Gmail
 
-
-          to: ${{ secrets.MAIL_USERNAME }}              # M'enoie le mail à moi-même'
-          from: GitHub Actions <${{ secrets.MAIL_USERNAME }}>
+          secure: true
+          from: ${{ secrets.FROM_EMAIL }}
+          to: digitalcity@yopmail.com
+         
 
 
           subject: "🚑 ÉCHEC CI/CD — MonApi — Branche ${{ github.ref_name }}"
@@ -97,7 +98,7 @@ jobs:
             🚨 Le pipeline CI/CD a rencontré une erreur !
 
            
-            📋 DÉTAILS DE L'ÉCHEC
+            ☣🚑 Details de l'échec
 
             🗂  Dépôt    : ${{ github.repository }}
             🌿 Branche  : ${{ github.ref_name }}
@@ -105,7 +106,7 @@ jobs:
             👤 Auteur   : ${{ github.actor }}
             🕐 Date     : ${{ github.event.head_commit.timestamp }}
 
-            🔗 VOIR LES LOGS COMPLETS
+            🔗 Voir logs
 
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
